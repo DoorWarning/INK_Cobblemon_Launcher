@@ -17,11 +17,14 @@ files:
 extraResources:
   - from: manifest/manifest.json
     to: manifest.json
+  - from: build/icon.ico
+    to: icon.ico
 asar: true
 win:
   target:
     - target: nsis
       arch: x64
+  icon: build/icon.ico
   artifactName: "${productName}-Setup-${version}.${ext}"
 nsis:
   oneClick: false

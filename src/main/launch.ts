@@ -4,6 +4,7 @@ import { Client, type ILauncherOptions } from 'minecraft-launcher-core';
 import type { Manifest, SyncProgress } from '@shared/types';
 import { dataRoot } from './paths';
 import { currentMclcAuth } from './auth';
+import { ensureGraalVMJava } from './java';
 import { log } from './logger';
 
 type ProgressFn = (p: SyncProgress) => void;
@@ -35,6 +36,11 @@ export async function launchGame(
 
   const root = dataRoot();
   const mc = manifest.minecraft;
+
+  onProgress({ stage: 'installing-fabric', message: 'Java(GraalVM) 준비 중…' });
+  const javaPath = await ensureGraalVMJava((message, bytesDownloaded, bytesTotal) => {
+    onProgress({ stage: 'installing-fabric', message, bytesDownloaded, bytesTotal });
+  });
 
   onProgress({ stage: 'installing-fabric', message: 'Fabric 로더 준비 중…' });
   const profileId = await ensureFabricProfile(root, mc.version, mc.loaderVersion);
@@ -76,6 +82,7 @@ export async function launchGame(
       max: `${Math.floor(mc.memoryMB.max)}M`,
       min: `${Math.floor(mc.memoryMB.min)}M`
     },
+    javaPath,
     overrides: {
       detached: false
     }

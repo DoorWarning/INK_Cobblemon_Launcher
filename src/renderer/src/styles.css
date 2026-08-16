@@ -36,15 +36,15 @@ button:disabled {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(1200px 600px at 20% 20%, rgba(99, 102, 241, 0.35), transparent 60%),
-    radial-gradient(900px 500px at 80% 80%, rgba(236, 72, 153, 0.35), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.45) 100%),
+    url('/background.jpg') center/cover no-repeat,
     linear-gradient(135deg, #0b0d12 0%, #1a1030 50%, #0b0d12 100%);
-  animation: bgshift 20s ease-in-out infinite alternate;
+  animation: bgshift 30s ease-in-out infinite alternate;
 }
 
 @keyframes bgshift {
-  0% { filter: hue-rotate(0deg) brightness(1); }
-  100% { filter: hue-rotate(20deg) brightness(1.05); }
+  0% { transform: scale(1); }
+  100% { transform: scale(1.04); }
 }
 
 .overlay {

@@ -9,6 +9,13 @@ import { launchGame } from './launch';
 
 let mainWindow: BrowserWindow | null = null;
 
+function resolveIconPath(): string {
+  // Packaged app: icon lives beside app resources. Dev: served from project root.
+  return app.isPackaged
+    ? path.join(process.resourcesPath, 'icon.ico')
+    : path.join(app.getAppPath(), 'build', 'icon.ico');
+}
+
 function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -18,6 +25,7 @@ function createWindow(): void {
     show: false,
     autoHideMenuBar: true,
     backgroundColor: '#111',
+    icon: resolveIconPath(),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false,

@@ -372,17 +372,6 @@
       "sha1": "8f555702810f25fee9df92bdd82b68b1868fca25",
       "size": 18743271,
       "autoEnable": true
-    },
-    {
-      "type": "resource",
-      "name": "Cobblemon Korean v.1.6",
-      "source": "direct",
-      "url": "https://github.com/DoorWarning/INK_Cobblemon_Launcher/releases/download/ko_patch/Cobblemon.Korean.v.1.6.zip",
-      "sha1": "b0924b22f075bd8c39961b88777035d79f2e30eb",
-      "size": 258324,
-      "autoEnable": true,
-      "priority": 10,
-      "overridePackFormat": 34
     }
   ]
 }
