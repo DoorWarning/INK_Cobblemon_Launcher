@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import AdmZip from 'adm-zip';
 import { app } from 'electron';
 import type { Manifest, ManifestAsset, SyncProgress } from '@shared/types';
 import {
@@ -15,6 +16,7 @@ import {
 import { log } from './logger';
 import {
   DEFAULTS_VERSION,
+  OPTIONS_TXT_SCHEMA_VERSION,
   DEFAULT_OPTIONS_SOFT,
   DEFAULT_OPTIONS_HARD,
   DEFAULT_BUILTIN_PACK_IDS,
@@ -29,8 +31,14 @@ const REMOTE_MANIFEST_URL =
 
 type ProgressFn = (p: SyncProgress) => void;
 
+interface InstalledEntry {
+  sha1: string;                     // hash to compare against on next sync (post-patch if patched)
+  type: ManifestAsset['type'];
+  manifestSha1?: string;            // original manifest sha; if this drifts we re-download
+}
+
 interface LocalState {
-  installed: Record<string, { sha1: string; type: ManifestAsset['type'] }>;
+  installed: Record<string, InstalledEntry>;
   defaultsAppliedVersion?: number;
 }
 
@@ -63,6 +71,33 @@ function fileNameFromUrl(url: string): string {
 function sha1File(p: string): string {
   const buf = fs.readFileSync(p);
   return crypto.createHash('sha1').update(buf).digest('hex').toLowerCase();
+}
+
+// Rewrite a resource-pack zip's pack.mcmeta so pack_format = target and
+// supported_formats spans a wide range. Used to force-load packs Minecraft
+// would otherwise reject as "no longer compatible".
+function patchPackFormat(zipPath: string, target: number): void {
+  const zip = new AdmZip(zipPath);
+  const entry = zip.getEntry('pack.mcmeta');
+  if (!entry) {
+    log.warn(`patchPackFormat: pack.mcmeta not found in ${zipPath}; skipping`);
+    return;
+  }
+  const raw = entry.getData().toString('utf8');
+  let json: { pack?: { pack_format?: number; supported_formats?: unknown; description?: string } };
+  try {
+    json = JSON.parse(raw);
+  } catch (err) {
+    log.warn(`patchPackFormat: invalid pack.mcmeta JSON in ${zipPath}: ${String(err)}`);
+    return;
+  }
+  json.pack = json.pack ?? {};
+  const original = json.pack.pack_format;
+  json.pack.pack_format = target;
+  json.pack.supported_formats = { min_inclusive: 1, max_inclusive: 999 };
+  zip.updateFile('pack.mcmeta', Buffer.from(JSON.stringify(json), 'utf8'));
+  zip.writeZip(zipPath);
+  log.info(`Patched pack.mcmeta in ${path.basename(zipPath)}: pack_format ${original} -> ${target}`);
 }
 
 function loadBundledManifest(): Manifest {
@@ -206,6 +241,13 @@ function applyDefaults(assets: ManifestAsset[], state: LocalState): void {
   }
   const map = parseOptionsTxt(existing);
 
+  // ALWAYS ensure the schema version is present and current. If missing,
+  // Minecraft's data-fixer treats the file as legacy and fails to parse it.
+  const existingVersion = map.get('version');
+  if (!existingVersion || Number(existingVersion) < Number(OPTIONS_TXT_SCHEMA_VERSION)) {
+    map.set('version', OPTIONS_TXT_SCHEMA_VERSION);
+  }
+
   if (firstTime) {
     for (const [k, v] of Object.entries(DEFAULT_OPTIONS_SOFT)) {
       if (!map.has(k)) map.set(k, v);
@@ -271,21 +313,21 @@ export async function syncAssets(onProgress: ProgressFn): Promise<Manifest> {
     const key = `${asset.type}/${filename}`;
 
     let needsDownload = true;
-    if (fs.existsSync(dest)) {
+    const prev = state.installed[key];
+    const manifestChanged = prev?.manifestSha1 !== undefined
+      ? prev.manifestSha1 !== asset.sha1.toLowerCase()
+      : prev?.sha1 !== asset.sha1.toLowerCase() && prev !== undefined;
+    if (fs.existsSync(dest) && !manifestChanged) {
       try {
         const localHash = sha1File(dest);
-        if (localHash === asset.sha1.toLowerCase()) {
-          needsDownload = false;
-        }
+        const expected = prev?.sha1 ?? asset.sha1.toLowerCase();
+        if (localHash === expected) needsDownload = false;
       } catch {
         needsDownload = true;
       }
     }
 
-    if (!needsDownload) {
-      state.installed[key] = { sha1: asset.sha1.toLowerCase(), type: asset.type };
-      continue;
-    }
+    if (!needsDownload) continue;
 
     onProgress({
       stage: 'downloading',
@@ -305,7 +347,25 @@ export async function syncAssets(onProgress: ProgressFn): Promise<Manifest> {
         bytesTotal: tot
       });
     });
-    state.installed[key] = { sha1: asset.sha1.toLowerCase(), type: asset.type };
+
+    // Optional pack-format patch for resource packs whose bundled pack.mcmeta
+    // targets an older Minecraft version than what we're running.
+    if (asset.type === 'resource' && typeof asset.overridePackFormat === 'number') {
+      try {
+        patchPackFormat(dest, asset.overridePackFormat);
+      } catch (err) {
+        log.warn(`Failed to patch pack format for ${asset.name}: ${String(err)}`);
+      }
+    }
+
+    // After optional patch, the on-disk hash may differ from manifest.sha1.
+    // Record what's actually on disk so next sync's local check matches.
+    const postSha = sha1File(dest);
+    state.installed[key] = {
+      sha1: postSha,
+      type: asset.type,
+      manifestSha1: asset.sha1.toLowerCase()
+    };
   }
 
   // Delete local files that are no longer in the manifest

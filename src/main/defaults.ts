@@ -2,7 +2,14 @@
 // Bump DEFAULTS_VERSION when you change any of these values so existing users
 // get the update on their next launch. (User-customized values are ALWAYS
 // respected — we only fill in keys the user has not explicitly set.)
-export const DEFAULTS_VERSION = 3;
+export const DEFAULTS_VERSION = 5;
+
+// Minecraft options.txt schema version. WITHOUT this line, Minecraft runs its
+// old-format data-fixer on our file — which chokes on modern string key IDs
+// (e.g. "key.keyboard.grave.accent") and aborts the entire options load,
+// causing onboarding to reappear and our packs/keys to be ignored.
+// 3955 = MC 1.21.1's schema version (SharedConstants.getCurrentVersion().getWorldVersion()).
+export const OPTIONS_TXT_SCHEMA_VERSION = '3955';
 
 // Soft defaults: filled only if the key is missing from options.txt.
 // User customizations always win. Suits preferences (language, view bobbing).
@@ -14,10 +21,17 @@ export const DEFAULT_OPTIONS_SOFT: Record<string, string> = {
   screenEffectScale: '0.0',
 
   // Skip Minecraft's first-launch onboarding overlays so our options.txt is
-  // honored on a fresh install (accessibility popup + tutorial hints + narrator).
-  onboardAccessibility: 'false',
-  tutorialStep: 'none',
-  narrator: '0'
+  // honored on a fresh install.
+  onboardAccessibility: 'false',   // full-screen accessibility onboarding
+  tutorialStep: 'none',            // vanilla movement tutorial hints
+  narrator: '0',                   // narrator off
+  hideBundleTutorial: 'true',      // 1.21 bundle tutorial popup
+  joinedFirstServer: 'true',       // "add a server" first-time hint
+  skipMultiplayerWarning: 'true',  // multiplayer chat/reporting warning
+  onlyShowSecureChat: 'false',
+  chatDelay: '0.0',
+  realmsNotifications: 'false',    // Realms ad popups
+  telemetryOptInExtra: 'false'
 };
 
 // Hard overrides: forced on every DEFAULTS_VERSION apply, even if the key
@@ -33,7 +47,8 @@ export const DEFAULT_OPTIONS_HARD: Record<string, string> = {
   'key_gui.xaero_zoom_in': 'key.keyboard.unknown',
   'key_gui.xaero_zoom_out': 'key.keyboard.unknown',
   'key_gui.xaero_new_waypoint': 'key.keyboard.equal',
-  'key_gui.xaero_open_map': 'key.keyboard.grave.accent'
+  'key_gui.xaero_open_map': 'key.keyboard.grave.accent',
+  'key_gui.xaero_enlarge_map': 'key.keyboard.unknown'
 };
 
 // Built-in mod resource packs. Verified format from live options.txt:

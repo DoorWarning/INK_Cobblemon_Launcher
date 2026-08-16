@@ -381,7 +381,8 @@
       "sha1": "b0924b22f075bd8c39961b88777035d79f2e30eb",
       "size": 258324,
       "autoEnable": true,
-      "priority": 10
+      "priority": 10,
+      "overridePackFormat": 34
     }
   ]
 }

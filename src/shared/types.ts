@@ -15,6 +15,12 @@ export interface ManifestAsset {
   // Higher = later in options.txt resourcePacks list = higher in-game priority.
   // Default 0. Only meaningful for type:"resource" with autoEnable:true.
   priority?: number;
+  // If set, launcher patches the pack's internal pack.mcmeta so `pack_format`
+  // equals this number after download — used to force-load resource packs that
+  // Minecraft would otherwise reject as "no longer compatible" (e.g. a MC 1.20
+  // Korean lang pack running on MC 1.21). SHA-1 verification happens BEFORE
+  // patching against the original manifest value.
+  overridePackFormat?: number;
 }
 
 export interface Manifest {
