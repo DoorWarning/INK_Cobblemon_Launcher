@@ -1,0 +1,15 @@
+node_modules/
+out/
+dist/
+.vite/
+*.log
+.DS_Store
+.env
+.env.local
+
+# Local test binaries — not for distribution (manifest points to Modrinth CDN)
+mods/
+resources/
+
+# TypeScript build info
+*.tsbuildinfo

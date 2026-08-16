@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell($resp = Get-Content \"C:\\\\Users\\\\GGM\\\\Desktop\\\\Develop\\\\Web\\\\INK_Mine_Launcher\\\\modrinth-response.json\" -Raw | ConvertFrom-Json; $keys = $resp | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name; \"Resolved count: $\\($keys.Count\\)\"; foreach \\($k in $keys\\) { $v = $resp.$k; $file = $v.files | Where-Object { $_.primary -eq $true } | Select-Object -First 1; if \\(-not $file\\) { $file = $v.files[0] }; \"[$k] project=$\\($v.project_id\\) name=$\\($file.filename\\) url=$\\($file.url\\)\" })",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(npm *)",
+      "PowerShell(node -e \"const fs=require\\('fs'\\);const p='C:/Users/GGM/Desktop/Develop/Web/INK_Mine_Launcher/manifest/manifest.json';const j=JSON.parse\\(fs.readFileSync\\(p,'utf8'\\)\\);fs.writeFileSync\\(p,JSON.stringify\\(j,null,2\\)\\);console.log\\('reformatted'\\);\")",
+      "PowerShell(npm view *)"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+appId: club.ink.launcher
+productName: Ink Launcher
+directories:
+  output: dist
+  buildResources: build
+files:
+  - "!**/.vscode/*"
+  - "!src/*"
+  - "!electron.vite.config.{js,mjs,ts}"
+  - "!tsconfig*.json"
+  - "!scripts/*"
+  - "!mods/*"
+  - "!resources/*"
+  - "!manifest/*"
+  - "!m.md"
+  - "!README.md"
+extraResources:
+  - from: manifest/manifest.json
+    to: manifest.json
+asar: true
+win:
+  target:
+    - target: nsis
+      arch: x64
+  artifactName: "${productName}-Setup-${version}.${ext}"
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  shortcutName: Ink Launcher
