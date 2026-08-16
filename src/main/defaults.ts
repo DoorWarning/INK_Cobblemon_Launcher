@@ -2,7 +2,7 @@
 // Bump DEFAULTS_VERSION when you change any of these values so existing users
 // get the update on their next launch. (User-customized values are ALWAYS
 // respected — we only fill in keys the user has not explicitly set.)
-export const DEFAULTS_VERSION = 2;
+export const DEFAULTS_VERSION = 3;
 
 // Soft defaults: filled only if the key is missing from options.txt.
 // User customizations always win. Suits preferences (language, view bobbing).
@@ -11,7 +11,13 @@ export const DEFAULT_OPTIONS_SOFT: Record<string, string> = {
   bobView: 'false',
   damageTiltStrength: '0.0',
   distortionEffectScale: '0.0',
-  screenEffectScale: '0.0'
+  screenEffectScale: '0.0',
+
+  // Skip Minecraft's first-launch onboarding overlays so our options.txt is
+  // honored on a fresh install (accessibility popup + tutorial hints + narrator).
+  onboardAccessibility: 'false',
+  tutorialStep: 'none',
+  narrator: '0'
 };
 
 // Hard overrides: forced on every DEFAULTS_VERSION apply, even if the key

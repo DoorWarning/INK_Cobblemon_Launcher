@@ -90,10 +90,18 @@ async function fetchManifest(): Promise<Manifest> {
     );
     return loadBundledManifest();
   }
+  // GitHub raw / most CDNs cache for a few minutes. Append a timestamp query
+  // and disable-cache headers to force an origin fetch on every launch.
+  const bust = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
   try {
-    const res = await fetch(url, { cache: 'no-store' });
+    const res = await fetch(bust, {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' }
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-    return (await res.json()) as Manifest;
+    const manifest = (await res.json()) as Manifest;
+    log.info(`Fetched remote manifest with ${manifest.assets?.length ?? 0} assets from ${url}`);
+    return manifest;
   } catch (err) {
     log.warn(`Remote manifest fetch failed (${String(err)}); falling back to bundled manifest.`);
     return loadBundledManifest();
@@ -180,8 +188,12 @@ function currentResourcePacks(map: Map<string, string>): string[] {
 }
 
 function applyDefaults(assets: ManifestAsset[], state: LocalState): void {
-  const filePacks = assets
+  // File-based packs, sorted by priority ascending — appended to the end of
+  // the resourcePacks list so higher-priority packs land LAST (Minecraft treats
+  // the last entry as the highest-priority pack, overriding those before it).
+  const filePacksSorted = assets
     .filter((a) => a.type === 'resource' && a.autoEnable)
+    .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
     .map((a) => `file/${fileNameFromUrl(a.url)}`);
 
   const firstTime = (state.defaultsAppliedVersion ?? 0) < DEFAULTS_VERSION;
@@ -194,29 +206,31 @@ function applyDefaults(assets: ManifestAsset[], state: LocalState): void {
   }
   const map = parseOptionsTxt(existing);
 
-  // Apply defaults only on version bump (or first-ever run). Between bumps,
-  // user changes made in-game are fully respected.
   if (firstTime) {
-    // Soft: fill missing preferences (never overwrite user's own choice).
     for (const [k, v] of Object.entries(DEFAULT_OPTIONS_SOFT)) {
       if (!map.has(k)) map.set(k, v);
     }
-    // Hard: forced key bindings — user asked for these specifically, so
-    // clobber whatever a mod wrote as its default.
     for (const [k, v] of Object.entries(DEFAULT_OPTIONS_HARD)) {
       map.set(k, v);
     }
   }
 
-  // Resource pack list: file-based packs from the manifest are ALWAYS ensured
-  // present (they're required assets). Built-in mod packs are only forced on
-  // the first-time apply so the user can later remove them via the in-game UI.
-  const packs = new Set(currentResourcePacks(map));
-  for (const p of filePacks) packs.add(p);
+  // Build the resource pack list in three tiers, low → high priority:
+  //   1. existing non-file packs from options.txt (vanilla, fabric, mod built-ins)
+  //   2. first-time built-in mod pack defaults (only if missing)
+  //   3. file-based packs from the manifest, sorted by priority ascending
+  const nonFilePacks = currentResourcePacks(map).filter((p) => !p.startsWith('file/'));
+  const nonFileSet = new Set(nonFilePacks);
   if (firstTime) {
-    for (const p of DEFAULT_BUILTIN_PACK_IDS) packs.add(p);
+    for (const id of DEFAULT_BUILTIN_PACK_IDS) {
+      if (!nonFileSet.has(id)) {
+        nonFilePacks.push(id);
+        nonFileSet.add(id);
+      }
+    }
   }
-  map.set('resourcePacks', JSON.stringify(Array.from(packs)));
+  const finalPacks = [...nonFilePacks, ...filePacksSorted];
+  map.set('resourcePacks', JSON.stringify(finalPacks));
 
   fs.writeFileSync(optionsFile(), serializeOptionsTxt(map), 'utf8');
 

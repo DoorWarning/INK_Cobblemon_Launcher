@@ -12,6 +12,9 @@ export interface ManifestAsset {
   size: number;
   autoEnable?: boolean;
   required?: boolean;
+  // Higher = later in options.txt resourcePacks list = higher in-game priority.
+  // Default 0. Only meaningful for type:"resource" with autoEnable:true.
+  priority?: number;
 }
 
 export interface Manifest {
