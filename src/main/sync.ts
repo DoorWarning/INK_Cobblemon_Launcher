@@ -25,7 +25,7 @@ import {
 // If unset, empty, or invalid, the launcher falls back to the manifest bundled inside the app.
 const REMOTE_MANIFEST_URL =
   process.env.INK_MANIFEST_URL ??
-  '';
+  'https://raw.githubusercontent.com/DoorWarning/INK_Cobblemon_Launcher/refs/heads/main/manifest/manifest.json';
 
 type ProgressFn = (p: SyncProgress) => void;
 
