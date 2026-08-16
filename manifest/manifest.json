@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-16T16:41:54Z",
+  "generatedAt": "2026-08-16T18:51:27Z",
   "minecraft": {
     "version": "1.21.1",
     "loader": "fabric",
-    "loaderVersion": "0.19.3",
+    "loaderVersion": "0.16.14",
     "java": "21",
     "memoryMB": {
       "min": 6144,
@@ -31,6 +31,16 @@
       "url": "https://cdn.modrinth.com/data/lhGA9TYQ/versions/Wto0RchG/architectury-13.0.8-fabric.jar",
       "sha1": "e71346a43c563e5784580dd096338acfb45f49d4",
       "size": 600915
+    },
+    {
+      "type": "mod",
+      "name": "athena-fabric-1.21.1-4.0.6",
+      "source": "modrinth",
+      "projectId": "b1ZV3DIJ",
+      "versionId": "JfyYsWKP",
+      "url": "https://cdn.modrinth.com/data/b1ZV3DIJ/versions/JfyYsWKP/athena-fabric-1.21.1-4.0.6.jar",
+      "sha1": "92534d85cad33ab1fee598068443c685f4bb06e0",
+      "size": 88425
     },
     {
       "type": "mod",
@@ -81,6 +91,16 @@
       "url": "https://cdn.modrinth.com/data/s7N7AsqL/versions/NQdxKsW7/CobbleDollars-fabric-2.0.0%2BBeta-6.1%2B1.21.1.jar",
       "sha1": "a3f33a9d51be927c47fe72e12de6789e8bab98f2",
       "size": 500815
+    },
+    {
+      "type": "mod",
+      "name": "CobbleFurnies-fabric-1.2",
+      "source": "modrinth",
+      "projectId": "AXY1OO9m",
+      "versionId": "54k31lEX",
+      "url": "https://cdn.modrinth.com/data/AXY1OO9m/versions/54k31lEX/CobbleFurnies-fabric-1.2.jar",
+      "sha1": "a71f20907c3350680a11054584cf96963f5875e5",
+      "size": 2337235
     },
     {
       "type": "mod",
@@ -251,6 +271,16 @@
       "url": "https://cdn.modrinth.com/data/xGdtZczs/versions/xqZ9fctS/polymer-bundled-0.9.19%2B1.21.1.jar",
       "sha1": "15a58f43a672ed486bee4f7983ae8ff566a6b5e7",
       "size": 1705944
+    },
+    {
+      "type": "mod",
+      "name": "Radical Gyms & Structures - RGS",
+      "source": "modrinth",
+      "projectId": "3sLJoaQH",
+      "versionId": "mk1teRxf",
+      "url": "https://cdn.modrinth.com/data/3sLJoaQH/versions/mk1teRxf/Radical%20Gyms%20%26%20Structures%20-%20RGS.jar",
+      "sha1": "4466492a22f2370d7b47b8e0ea6aa12977099595",
+      "size": 2084611
     },
     {
       "type": "mod",
