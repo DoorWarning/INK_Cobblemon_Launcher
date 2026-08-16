@@ -105,6 +105,12 @@ async function downloadWithRetry(
   destPath: string,
   onBytes: (downloaded: number, total: number) => void
 ): Promise<void> {
+  if (!asset.url || !isValidHttpUrl(asset.url)) {
+    throw new Error(
+      `매니페스트의 "${asset.name}" 항목에 유효한 다운로드 URL이 없습니다 ` +
+        `(현재 값: "${asset.url}"). manifest.json에서 이 항목의 url을 실제 http/https 링크로 교체하세요.`
+    );
+  }
   const maxAttempts = 3;
   let lastErr: unknown;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
