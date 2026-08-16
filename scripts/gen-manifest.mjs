@@ -17,7 +17,7 @@ const resDir = path.join(root, 'resources');
 const outDir = path.join(root, 'manifest');
 const outFile = path.join(outDir, 'manifest.json');
 
-const MC = { version: '1.21.1', loader: 'fabric', loaderVersion: '0.16.14', java: '21', memoryMB: { min: 6144, max: 8192 } };
+const MC = { version: '1.21.1', loader: 'fabric', loaderVersion: '0.19.3', java: '21', memoryMB: { min: 6144, max: 8192 } };
 const UA = 'InkLauncher/0.1 (poiu3405@gmail.com)';
 
 function listFiles(dir, type) {
