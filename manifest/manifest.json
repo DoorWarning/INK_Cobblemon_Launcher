@@ -4,7 +4,7 @@
   "minecraft": {
     "version": "1.21.1",
     "loader": "fabric",
-    "loaderVersion": "0.16.14",
+    "loaderVersion": "0.19.3",
     "java": "21",
     "memoryMB": {
       "min": 6144,
