@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-16T18:51:27Z",
+  "generatedAt": "2026-08-18T09:32:46Z",
   "minecraft": {
     "version": "1.21.1",
     "loader": "fabric",
@@ -124,6 +124,16 @@
     },
     {
       "type": "mod",
+      "name": "entityculling-fabric-1.10.5-mc1.21.1",
+      "source": "modrinth",
+      "projectId": "NNAgCjsB",
+      "versionId": "hsWvcyFJ",
+      "url": "https://cdn.modrinth.com/data/NNAgCjsB/versions/hsWvcyFJ/entityculling-fabric-1.10.5-mc1.21.1.jar",
+      "sha1": "7e8c9c44049e6575e75d1fe38d6006306b8d5623",
+      "size": 1595131
+    },
+    {
+      "type": "mod",
       "name": "fabric-api",
       "source": "modrinth",
       "projectId": "P7dR8mSH",
@@ -184,6 +194,16 @@
     },
     {
       "type": "mod",
+      "name": "ImmediatelyFast-Fabric-1.6.12+1.21.1",
+      "source": "modrinth",
+      "projectId": "5ZwdcRci",
+      "versionId": "nLX2NbyQ",
+      "url": "https://cdn.modrinth.com/data/5ZwdcRci/versions/nLX2NbyQ/ImmediatelyFast-Fabric-1.6.12%2B1.21.1.jar",
+      "sha1": "c87b48facbc2ec1bc07d615ecc0fff22eaa3453f",
+      "size": 337368
+    },
+    {
+      "type": "mod",
       "name": "InventoryProfilesNext-fabric-1.21.1-2.2.6",
       "source": "modrinth",
       "projectId": "O7RBXm3n",
@@ -224,6 +244,16 @@
     },
     {
       "type": "mod",
+      "name": "modernfix-fabric-5.25.1+mc1.21.1",
+      "source": "modrinth",
+      "projectId": "nmDcB62a",
+      "versionId": "NnNX8LBn",
+      "url": "https://cdn.modrinth.com/data/nmDcB62a/versions/NnNX8LBn/modernfix-fabric-5.25.1%2Bmc1.21.1.jar",
+      "sha1": "4ab39e9c736e7204146792c545ec5b29fc0a3872",
+      "size": 471258
+    },
+    {
+      "type": "mod",
       "name": "MythsandLegends",
       "source": "modrinth",
       "projectId": "CaOWby9K",
@@ -231,6 +261,16 @@
       "url": "https://cdn.modrinth.com/data/CaOWby9K/versions/eg83qtSQ/MythsAndLegends-fabric-1.9.0.jar",
       "sha1": "9acdd403a8c1a5544d7f779f301c5f3630d0a211",
       "size": 3249725
+    },
+    {
+      "type": "mod",
+      "name": "noisium-fabric-2.7.0+mc1.21-1.21.1",
+      "source": "modrinth",
+      "projectId": "hasdd01q",
+      "versionId": "bQdp8Lez",
+      "url": "https://cdn.modrinth.com/data/hasdd01q/versions/bQdp8Lez/noisium-fabric-2.7.0%2Bmc1.21-1.21.1.jar",
+      "sha1": "b202a0d63069ad80a802bb20936b254252a4dae0",
+      "size": 216393
     },
     {
       "type": "mod",
